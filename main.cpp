@@ -3,7 +3,7 @@
 #include <ctime>
 #include <stdlib.h>
 #include <vector>
-#include<array>
+#include <array>
 #include <conio.h>
 
 
@@ -21,36 +21,46 @@ private:
     int health;
     int attack;
     int defence;
-    int healthpoisons;
+    int medical;
 
 public:
+    Figures() {}
     Figures(int px, int py) {
-        srand(time(0));
+        srand(time(NULL));
         posx = px;
         posy = py;
         health = 10;
         attack = (rand() % 3) + 1;
-        healthpoisons = (rand() % 3);
+        medical = (rand() % 3);
         defence = (rand() % 2) + 1;
         //cout << "Make a Figure" << endl;
     }
-
     int get_position() {
         return posx;
     }
+    void set_x(int in_x) {
+        posx = in_x;
+    }
+    void set_y(int in_y) {
+        posx = in_y;
+    }
+
 
 };
 
 class Warewolves :public Figures {
 public:
+    Warewolves() {};
     Warewolves(int px, int py) :Figures(px, py) {
+        Warewolves* w = new Warewolves;
         cout << "Make a warewolf" << " " << px << " " << py << endl;
     }
 
 };
 
-class Vampires : Figures {
+class Vampires :public Figures {
 public:
+    Vampires() {};
     Vampires(int px, int py) :Figures(px, py) {
         cout << "Make a Vampire" << " " << px << " " << py << endl;
     }
@@ -61,8 +71,9 @@ private:
     char Team;
 
 public:
-    Avatar(int px, int py) :Figures(px, py) {
-        cout << "Make an Avatar" << " " << px << " " << py << endl;
+    Avatar() {}
+    Avatar(int x, int y) :Figures(x, y) {
+        cout << "Make an Avatar" << " " << x << " " << y << endl;
     }
 
     void Set_team(char team) {
@@ -73,100 +84,38 @@ public:
         return Team;
     }
 
-
-
-    void Move() {
-
-        long int c = 0;
-        c = _getch();
-        cout << c << endl;
-        switch ((c = _getch())) {
-
-        case KEY_UP:
-            cout << endl << "Up" << endl;//key up
-            break;
-        case KEY_DOWN:
-            cout << endl << "Down" << endl;   // key down
-            break;
-        case KEY_LEFT:
-            cout << endl << "Left" << endl;  // key left
-            break;
-        case KEY_RIGHT:
-            cout << endl << "Right" << endl;  // key right
-            break;
-        default:
-            cout << endl << "null" << endl;  // not arrow
-            break;
-        }
-
-
-    }
 };
 
 
+vector< array<int, 2 >> start(vector<Warewolves*> &war, vector<Vampires*> &vam, Avatar &pl) {
 
-int main()
-{
-    srand(time(0));
-    int t, x, y;
+    srand(time(NULL));
+    int x, y;
     int counter = 0;
     char team;
 
-    cout << "Please initialize the the map" << endl << "x:";
+    cout << "Please initialize the map" << endl << "x:";
     cin >> x;
     cout << "y: ";
     cin >> y;
-    cout << "Please choose your team" << endl;
-    cin >> team;
-    vector<Warewolves> War = vector<Warewolves>();
-    vector<Vampires> Vam = vector<Vampires>();
+
     vector < array<int, 2 >> pos = vector<array<int, 2>>();
 
     for (int i = 0; i < x; i++) {
+        //cout << endl;
         for (int j = 0; j < y; j++) {
+
             array<int, 2> p;
             p[0] = i;
             p[1] = j;
+            //cout << "- ";
             pos.push_back(p);
-
 
             counter++;
 
         }
     }
 
-
-
-    //Warewolves set to a start position
-    for (int i = 0; i < ((x * y) / 15); i++) {
-
-        int xy = (rand() % pos.size()) - 1;
-        array<int, 2> posxy = pos.at(xy);
-        array<int, 2> temp = pos.at(xy);
-
-        pos.at(xy) = pos.at(pos.size() - 1);
-        pos.push_back(temp);
-        pos.pop_back();
-        pos.resize(pos.size() - 1);
-
-        Warewolves w(posxy[0], posxy[1]);
-        War.push_back(w);
-    }
-
-    //Vampires set to a start position
-    for (int i = 0; i < ((x * y) / 15); i++) {
-        int xy = (rand() % pos.size()) - 1;
-        array<int, 2> posxy = pos.at(xy);
-        array<int, 2> temp = pos.at(xy);
-
-        pos.at(xy) = pos.at(pos.size() - 1);
-        pos.push_back(temp);
-        pos.pop_back();
-        pos.resize(pos.size() - 1);
-
-        Vampires v(posxy[0], posxy[1]);
-        Vam.push_back(v);
-    }
 
     //set the sea and the trees
     for (int i = 0; i < (x * y) / 5; i++) {
@@ -180,7 +129,41 @@ int main()
         pos.resize(pos.size() - 1);
     }
 
-    //Make Avatar
+    //Warewolves set to a start position
+    for (int i = 0; i < ((x * y) / 15); i++) {
+
+        int xy = (rand() % pos.size()) - 1;
+        array<int, 2> posxy = pos.at(xy);
+        array<int, 2> temp = pos.at(xy);
+
+        pos.at(xy) = pos.at(pos.size() - 1);
+        pos.push_back(temp);
+        pos.pop_back();
+        pos.resize(pos.size() - 1);
+
+        Warewolves* w = new Warewolves;
+        Warewolves x(posxy[0], posxy[1]);
+        w = &x;
+        war.push_back(w);
+    }
+
+    //Vampires set to a start position
+    for (int i = 0; i < ((x * y) / 15); i++) {
+        int xy = (rand() % pos.size()) - 1;
+        array<int, 2> posxy = pos.at(xy);
+        array<int, 2> temp = pos.at(xy);
+
+        pos.at(xy) = pos.at(pos.size() - 1);
+        pos.push_back(temp);
+        pos.pop_back();
+        pos.resize(pos.size() - 1);
+
+        Vampires * v = new Vampires;
+        Vampires  x(posxy[0], posxy[1]);
+        v = &x;
+        vam.push_back(v);
+    }
+    //Make Avatar and place it to a start position
     int xy = (rand() % pos.size()) - 1;
     array<int, 2> posxy = pos.at(xy);
     array<int, 2> temp = pos.at(xy);
@@ -191,14 +174,34 @@ int main()
     pos.resize(pos.size() - 1);
 
     Avatar player(posxy[0], posxy[1]);
+    cout << "Please choose your team" << endl;
+    cin >> team;
     player.Set_team(team);
     cout << player.Get_team() << endl;
 
-    player.Move();
 
 
-    cin >> t;
-    cout << t;
+    return pos;
+}
+
+int main()
+{
+
+
+    vector<Warewolves*> w= vector <Warewolves *>();
+    vector<Vampires *> v = vector <Vampires *>();
+    Avatar player;
+    //Make the map and put the players in vector or coordinates
+    vector< array<int, 2 >> empty_coor = start(w,v,player);
+    
+
+    
+    cout << endl << w.size();
+    cout << endl << v.size();
+    cout << endl << empty_coor.size();
+
+
+
 
 }
 
