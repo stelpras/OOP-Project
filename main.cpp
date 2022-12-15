@@ -9,15 +9,11 @@
 
 using namespace std;
 
-#define KEY_UP 256+ 72
-#define KEY_DOWN 256+ 80
-#define KEY_LEFT 256+75
-#define KEY_RIGHT 256+77
 
 class Figures {
 private:
-    int posx;
-    int posy;
+    int px;
+    int py;
     int health;
     int attack;
     int defence;
@@ -26,8 +22,8 @@ private:
 public:
     Figures(int x=0, int y=0) {
         srand(time(NULL));
-        posx = x;
-        posy = y;
+        px = x;
+        py = y;
         health = 10;
         attack = (rand() % 3) + 1;
         medical = (rand() % 3);
@@ -35,21 +31,22 @@ public:
         //cout << "Make a Figure" << endl;
     }
     int get_x() {
-        return posx;
+        return px;
     }
     int get_y() {
-        return posy;
+        return py;
     }
     void set_x(int in_x) {
-        posx = in_x;
+        px = in_x;
     }
     void set_y(int in_y) {
-        posy = in_y;
+        py = in_y;
     }
 };
 
 class Warewolves :public Figures {
 public:
+    char team ='W';
     Warewolves(int x=0, int y=0) :Figures(x, y) {
         x = get_x();
         y = get_y();
@@ -59,6 +56,7 @@ public:
 
 class Vampires :public Figures {
 public:
+    char team = 'V';
     Vampires(int x=0, int y=0) :Figures(x, y) {
         x = get_x();
         y = get_y();
@@ -87,8 +85,35 @@ public:
 };
 
 
-vector< array<int, 2 >> start(vector<Figures *> &war, vector<Figures *> &vam, Avatar &pl) {
-    
+
+
+class block {
+    public:
+        int x, y;
+        block(int in_x= 0, int in_y = 0) {
+            x = in_x;
+            y = in_y;
+        }
+        bool operator==(const block& s) const {
+            return x == s.x && y == s.y;
+        }
+        int get_x() {
+            return x;
+        }
+        int get_y() {
+            return y;
+        }
+        void set_x(int in_x) {
+            x = in_x;
+        }
+        void set_y(int in_y) {
+            y = in_y;
+        }
+
+};
+
+vector<block> start(vector<Figures*>& war, vector<Figures*>& vam, Avatar& pl) {
+
     int x, y;
     int counter = 0;
     char team;
@@ -98,15 +123,15 @@ vector< array<int, 2 >> start(vector<Figures *> &war, vector<Figures *> &vam, Av
     cout << "y: ";
     cin >> y;
 
-    vector < array<int, 2 >> pos = vector<array<int, 2>>();
+    vector < block> pos = vector<block>();
 
     for (int i = 0; i < x; i++) {
         //cout << endl;
         for (int j = 0; j < y; j++) {
 
-            array<int, 2> p;
-            p[0] = i;
-            p[1] = j;
+            block p;
+            p.set_x(i);
+            p.set_y(j);
             //cout << "- ";
             pos.push_back(p);
 
@@ -119,8 +144,8 @@ vector< array<int, 2 >> start(vector<Figures *> &war, vector<Figures *> &vam, Av
     //set the sea and the trees
     for (int i = 0; i < (x * y) / 5; i++) {
         int xy = (rand() % pos.size()) - 1;
-        array<int, 2> posxy = pos.at(xy);
-        array<int, 2> temp = pos.at(xy);
+        block posxy = pos.at(xy);
+        block temp = pos.at(xy);
 
         pos.at(xy) = pos.at(pos.size() - 1);
         pos.push_back(temp);
@@ -132,45 +157,45 @@ vector< array<int, 2 >> start(vector<Figures *> &war, vector<Figures *> &vam, Av
     for (int i = 0; i < ((x * y) / 15); i++) {
 
         int xy = (rand() % pos.size()) - 1;
-        array<int, 2> posxy = pos.at(xy);
-        array<int, 2> temp = pos.at(xy);
+        block posxy = pos.at(xy);
+        block temp = pos.at(xy);
 
         pos.at(xy) = pos.at(pos.size() - 1);
         pos.push_back(temp);
         pos.pop_back();
         pos.resize(pos.size() - 1);
 
-        Figures* w = new Warewolves(posxy[0], posxy[1]);
+        Figures* w = new Warewolves(posxy.get_x(), posxy.get_y());
         war.push_back(w);
     }
 
     //Vampires set to a start position
     for (int i = 0; i < ((x * y) / 15); i++) {
         int xy = (rand() % pos.size()) - 1;
-        array<int, 2> posxy = pos.at(xy);
-        array<int, 2> temp = pos.at(xy);
+        block posxy = pos.at(xy);
+        block temp = pos.at(xy);
 
         pos.at(xy) = pos.at(pos.size() - 1);
         pos.push_back(temp);
         pos.pop_back();
         pos.resize(pos.size() - 1);
 
-        Figures* v = new Vampires(posxy[0], posxy[1]);
+        Figures* v = new Vampires(posxy.get_x(), posxy.get_y());
         vam.push_back(v);
     }
     //Make Avatar and place it to a start position
     int xy = (rand() % pos.size()) - 1;
-    array<int, 2> posxy = pos.at(xy);
-    array<int, 2> temp = pos.at(xy);
+    block posxy = pos.at(xy);
+    block temp = pos.at(xy);
 
     pos.at(xy) = pos.at(pos.size() - 1);
     pos.push_back(temp);
     pos.pop_back();
     pos.resize(pos.size() - 1);
 
-    pl.set_x(posxy[0]);
-    pl.set_y(posxy[1]);
-    cout << "Make an Avatar" << " " << posxy[0] << " " << posxy[1] << endl;
+    pl.set_x(posxy.get_x());
+    pl.set_y(posxy.get_y());
+    cout << "Make an Avatar" << " " << posxy.get_x() << " " << posxy.get_y() << endl;
     cout << "Please choose your team" << endl;
     cin >> team;
     pl.Set_team(team);
@@ -179,17 +204,40 @@ vector< array<int, 2 >> start(vector<Figures *> &war, vector<Figures *> &vam, Av
     return pos;
 }
 
+bool Legal_move(vector< block>& empty_blocks, block b) {
+    vector< block>::iterator item;
+    item = find(empty_blocks.begin(), empty_blocks.end(), b);
+    if (item != empty_blocks.end())
+    {
+        cout << endl << "Element found";
+        return true;
+    }
+    else
+    {
+        cout << endl << "Element not found";
+        return false;
+    }
+}
+
+
 int main()
 {
 
 
     vector<Figures*> w,v= vector <Figures*>();
     Avatar player;
-    vector< array<int, 2 >> empty_coor = start(w,v,player);
+    vector<block> empty_coor = start(w,v,player);
 
-    //test
+    //test oi syntetagenes kai o vector einai swstes kai meta thn synarthsh
     cout << endl <<"Avatar " << player.get_x() << "," << player.get_y();
+    cout << endl << empty_coor.size();
 
+
+    //test an h legal move doyleyei
+    block b;
+    b.set_x(player.get_x());
+    b.set_y(player.get_y());
+    Legal_move(empty_coor, b); 
 
 
 
