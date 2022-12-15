@@ -24,56 +24,56 @@ private:
     int medical;
 
 public:
-    Figures() {}
-    Figures(int px, int py) {
+    Figures(int x=0, int y=0) {
         srand(time(NULL));
-        posx = px;
-        posy = py;
+        posx = x;
+        posy = y;
         health = 10;
         attack = (rand() % 3) + 1;
         medical = (rand() % 3);
         defence = (rand() % 2) + 1;
         //cout << "Make a Figure" << endl;
     }
-    int get_position() {
+    int get_x() {
         return posx;
+    }
+    int get_y() {
+        return posy;
     }
     void set_x(int in_x) {
         posx = in_x;
     }
     void set_y(int in_y) {
-        posx = in_y;
+        posy = in_y;
     }
-
-
 };
 
 class Warewolves :public Figures {
 public:
-    Warewolves() {};
-    Warewolves(int px, int py) :Figures(px, py) {
-        Warewolves* w = new Warewolves;
-        cout << "Make a warewolf" << " " << px << " " << py << endl;
+    Warewolves(int x=0, int y=0) :Figures(x, y) {
+        x = get_x();
+        y = get_y();
+        cout << "Make a warewolf" << " " << x << " " << y << endl;
     }
-
 };
 
 class Vampires :public Figures {
 public:
-    Vampires() {};
-    Vampires(int px, int py) :Figures(px, py) {
-        cout << "Make a Vampire" << " " << px << " " << py << endl;
+    Vampires(int x=0, int y=0) :Figures(x, y) {
+        x = get_x();
+        y = get_y();
+        cout << "Make a Vampire" << " " << x << " " << y << endl;
     }
 };
 
 class Avatar :public Figures {
 private:
-    char Team;
+    char Team=' ';
 
 public:
-    Avatar() {}
-    Avatar(int x, int y) :Figures(x, y) {
-        cout << "Make an Avatar" << " " << x << " " << y << endl;
+    Avatar(int x=0, int y=0) :Figures(x, y) {
+        x = get_x();
+        y = get_y();
     }
 
     void Set_team(char team) {
@@ -87,9 +87,8 @@ public:
 };
 
 
-vector< array<int, 2 >> start(vector<Warewolves*> &war, vector<Vampires*> &vam, Avatar &pl) {
-
-    srand(time(NULL));
+vector< array<int, 2 >> start(vector<Figures *> &war, vector<Figures *> &vam, Avatar &pl) {
+    
     int x, y;
     int counter = 0;
     char team;
@@ -116,7 +115,7 @@ vector< array<int, 2 >> start(vector<Warewolves*> &war, vector<Vampires*> &vam, 
         }
     }
 
-
+    srand(time(NULL));
     //set the sea and the trees
     for (int i = 0; i < (x * y) / 5; i++) {
         int xy = (rand() % pos.size()) - 1;
@@ -141,9 +140,7 @@ vector< array<int, 2 >> start(vector<Warewolves*> &war, vector<Vampires*> &vam, 
         pos.pop_back();
         pos.resize(pos.size() - 1);
 
-        Warewolves* w = new Warewolves;
-        Warewolves x(posxy[0], posxy[1]);
-        w = &x;
+        Figures* w = new Warewolves(posxy[0], posxy[1]);
         war.push_back(w);
     }
 
@@ -158,9 +155,7 @@ vector< array<int, 2 >> start(vector<Warewolves*> &war, vector<Vampires*> &vam, 
         pos.pop_back();
         pos.resize(pos.size() - 1);
 
-        Vampires * v = new Vampires;
-        Vampires  x(posxy[0], posxy[1]);
-        v = &x;
+        Figures* v = new Vampires(posxy[0], posxy[1]);
         vam.push_back(v);
     }
     //Make Avatar and place it to a start position
@@ -173,13 +168,13 @@ vector< array<int, 2 >> start(vector<Warewolves*> &war, vector<Vampires*> &vam, 
     pos.pop_back();
     pos.resize(pos.size() - 1);
 
-    Avatar player(posxy[0], posxy[1]);
+    pl.set_x(posxy[0]);
+    pl.set_y(posxy[1]);
+    cout << "Make an Avatar" << " " << posxy[0] << " " << posxy[1] << endl;
     cout << "Please choose your team" << endl;
     cin >> team;
-    player.Set_team(team);
-    cout << player.Get_team() << endl;
-
-
+    pl.Set_team(team);
+    cout << pl.Get_team() << endl;
 
     return pos;
 }
@@ -188,21 +183,17 @@ int main()
 {
 
 
-    vector<Warewolves*> w= vector <Warewolves *>();
-    vector<Vampires *> v = vector <Vampires *>();
+    vector<Figures*> w,v= vector <Figures*>();
     Avatar player;
-    //Make the map and put the players in vector or coordinates
     vector< array<int, 2 >> empty_coor = start(w,v,player);
-    
 
-    
-    cout << endl << w.size();
-    cout << endl << v.size();
-    cout << endl << empty_coor.size();
+    //test
+    cout << endl <<"Avatar " << player.get_x() << "," << player.get_y();
 
 
 
 
+    return 0;
 }
 
 
