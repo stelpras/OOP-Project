@@ -404,6 +404,7 @@ Warewolves* in_werewolves(vector<Warewolves*>& war, block neighboor) {
     Warewolves* nul = NULL;
     return nul;
 }
+
 Vampires* in_vampires(vector<Vampires*>& vam, block neighboor) {
     for (int i = 0; i < vam.size(); i++) {
         if (vam[i]->get_block() == neighboor) {

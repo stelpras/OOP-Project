@@ -80,7 +80,7 @@ private:
 
 public:
     Avatar(block b) :Figures(b) {
-        b = get_block();
+        potions = 1;
         Team = ' ';
     }
 
@@ -92,6 +92,14 @@ public:
 
 };
 
+
+bool exist_block(vector< block>& vec, block b);
 block start(int x, int y, vector<block>& map, vector<block>& erased, vector<block>& players_position, vector<Warewolves*>& war, vector<Vampires*>& vam, Avatar& pl);
 void play(vector<block>& map, vector<Warewolves*>& war, vector<Vampires*>& vam, Avatar& player, vector<block>& players_position);
 void print_map(int x, int y, vector<block>& map, vector<block>& erased, Avatar& player, block& magic_filter);
+block near_creature_block(block creature, vector< block>& map, vector<block>& players_position);
+bool exist_warewolve(vector< Warewolves*>& vec, block b);
+bool exist_vampire(vector< Vampires*>& vec, block b);
+Warewolves* in_werewolves(vector<Warewolves*>& war, block neighboor);
+Vampires* in_vampires(vector<Vampires*>& vam, block neighboor);
+block find_random(int x, int y, vector<block>& map, vector<block>& same_position);

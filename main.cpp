@@ -17,7 +17,6 @@ int main()
     int x, y, map_size;
     block pl;
     Avatar player(pl);
-    player.set_potion(1);
     vector<Warewolves*> war = vector <Warewolves*>();
     vector<Vampires*> vam = vector <Vampires*>();
 
