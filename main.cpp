@@ -1,21 +1,10 @@
-#include <iostream>
-#include <ctime>
-#include <stdlib.h>
-#include <vector>
-#include <conio.h>
-
-
 #include "Header.h"
-
-
-
-using namespace std;
-
 
 int main()
 {
     int x, y, map_size;
     block pl;
+    //create players
     Avatar player(pl);
     vector<Warewolves*> war = vector <Warewolves*>();
     vector<Vampires*> vam = vector <Vampires*>();
@@ -26,6 +15,7 @@ int main()
     cin >> y;
     map_size = x * y;
 
+    //create map
     vector<block> map = vector<block>();
     for (int i = 0; i < x; i++) {
         for (int j = 0; j < y; j++) {
@@ -48,6 +38,7 @@ int main()
     magic_filter.pr = 'M';
 
 
+    //Play the game until someone wins
     bool day = true;
     int round_counter = 0;
     while (!vam.empty() && !war.empty()) {
