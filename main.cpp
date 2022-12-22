@@ -36,7 +36,7 @@ int main()
     block magic_filter = start(x, y, map, erased, players_position, war, vam, player);
 
     magic_filter.pr = 'M';
-
+    int magic_filter_counter = 0;
 
     //Play the game until someone wins
     bool day = true;
@@ -50,9 +50,12 @@ int main()
 
         play(map, war, vam, player, players_position);
         pl = player.get_block();
-        if (pl == magic_filter) {
+
+
+        if (pl == magic_filter && magic_filter_counter==0) {
             magic_filter.pr = '-';
             player.set_potion(player.get_potions() + 1);
+            magic_filter_counter++;
         }
         print_map(x, y, map, erased, player, magic_filter);
         round_counter = round_counter + 1;
