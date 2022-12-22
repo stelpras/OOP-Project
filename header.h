@@ -82,7 +82,6 @@ public:
     Avatar(block b) :Figures(b) {
         b = get_block();
         Team = ' ';
-        potions = 1;
     }
 
     void set_team(char team);
